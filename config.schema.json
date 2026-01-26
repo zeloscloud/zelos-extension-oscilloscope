@@ -1,0 +1,160 @@
+{
+  "$comment": "Oscilloscope configuration schema for Zelos App UI",
+  "type": "object",
+  "title": "Oscilloscope Configuration",
+  "description": "Configure oscilloscope channels, sampling, and trigger modes",
+  "properties": {
+    "num_channels": {
+      "type": "integer",
+      "title": "Number of Channels",
+      "description": "Number of input channels to acquire",
+      "enum": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "default": 4,
+      "ui:widget": "select"
+    },
+    "sample_rate": {
+      "type": "integer",
+      "title": "Sample Rate (Hz)",
+      "description": "Samples per second (1 kHz to 10 MHz)",
+      "minimum": 1000,
+      "maximum": 10000000,
+      "default": 100000,
+      "ui:help": "Higher rates capture faster signals but generate more data"
+    },
+    "trigger_mode": {
+      "type": "string",
+      "title": "Trigger Mode",
+      "description": "Acquisition trigger behavior",
+      "enum": [
+        "continuous",
+        "single",
+        "repeat"
+      ],
+      "enumNames": [
+        "Continuous",
+        "Single Shot",
+        "Repeat (N-Shot)"
+      ],
+      "default": "continuous",
+      "ui:widget": "radio"
+    },
+    "repeat_count": {
+      "type": "integer",
+      "title": "Repeat Count",
+      "description": "Number of captures in repeat mode",
+      "minimum": 1,
+      "maximum": 1000,
+      "default": 10,
+      "ui:help": "Only used in Repeat mode"
+    },
+    "record_duration": {
+      "type": "number",
+      "title": "Record Duration (seconds)",
+      "description": "Duration of each capture window",
+      "minimum": 1e-06,
+      "maximum": 60.0,
+      "default": 0.01,
+      "ui:help": "Time window for each acquisition (1\u00b5s to 60s)"
+    },
+    "decimation": {
+      "type": "integer",
+      "title": "Decimation Factor",
+      "description": "Reduce data rate by averaging N samples (min-max compression)",
+      "enum": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "default": 1,
+      "ui:widget": "select",
+      "ui:help": "Use higher values for longer time windows"
+    },
+    "demo_signals": {
+      "type": "object",
+      "title": "Demo Signal Configuration",
+      "description": "Configure simulated signals for each channel",
+      "properties": {
+        "ch1_frequency": {
+          "type": "number",
+          "title": "CH1 Frequency (Hz)",
+          "default": 50.0,
+          "minimum": 0.1,
+          "maximum": 1000000
+        },
+        "ch1_amplitude": {
+          "type": "number",
+          "title": "CH1 Amplitude (V)",
+          "default": 5.0,
+          "minimum": 0.0,
+          "maximum": 100.0
+        },
+        "ch2_frequency": {
+          "type": "number",
+          "title": "CH2 Frequency (Hz)",
+          "default": 100.0,
+          "minimum": 0.1,
+          "maximum": 1000000
+        },
+        "ch2_amplitude": {
+          "type": "number",
+          "title": "CH2 Amplitude (V)",
+          "default": 3.3,
+          "minimum": 0.0,
+          "maximum": 100.0
+        },
+        "ch3_frequency": {
+          "type": "number",
+          "title": "CH3 Frequency (Hz)",
+          "default": 200.0,
+          "minimum": 0.1,
+          "maximum": 1000000
+        },
+        "ch3_amplitude": {
+          "type": "number",
+          "title": "CH3 Amplitude (V)",
+          "default": 2.5,
+          "minimum": 0.0,
+          "maximum": 100.0
+        },
+        "ch4_frequency": {
+          "type": "number",
+          "title": "CH4 Frequency (Hz)",
+          "default": 500.0,
+          "minimum": 0.1,
+          "maximum": 1000000
+        },
+        "ch4_amplitude": {
+          "type": "number",
+          "title": "CH4 Amplitude (V)",
+          "default": 1.8,
+          "minimum": 0.0,
+          "maximum": 100.0
+        },
+        "noise_level": {
+          "type": "number",
+          "title": "Noise Level (V RMS)",
+          "description": "Random noise added to signals",
+          "default": 0.05,
+          "minimum": 0.0,
+          "maximum": 1.0
+        }
+      }
+    }
+  },
+  "required": [
+    "num_channels",
+    "sample_rate",
+    "trigger_mode"
+  ]
+}
