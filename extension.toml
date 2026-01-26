@@ -1,0 +1,34 @@
+# Zelos Extension Manifest
+# Oscilloscope extension for signal acquisition and waveform visualization
+
+name = "Oscilloscope"
+version = "0.1.0"
+description = "High-resolution oscilloscope for multi-channel waveform acquisition with configurable trigger modes and sampling rates"
+author = "Zelos"
+repository = "https://github.com/zeloscloud/zelos-extension-oscilloscope"
+homepage = "https://github.com/zeloscloud/zelos-extension-oscilloscope"
+keywords = ["oscilloscope", "waveform", "signal", "acquisition", "dsp"]
+categories = ["Test & Measurement", "Signal Analysis"]
+
+# File references
+icon = "assets/icon.svg"
+readme = "README.md"
+changelog = "CHANGELOG.md"
+
+# Compatibility
+[zelos]
+version = ">=25.0.22-0"
+
+# Configuration schema
+[config]
+schema = "config.schema.json"
+
+# Runtime configuration
+[runtime]
+type = "python"
+entry = "main.py"
+python_version = "3.11"
+
+# Graceful shutdown
+[stop]
+grace_seconds = 10
