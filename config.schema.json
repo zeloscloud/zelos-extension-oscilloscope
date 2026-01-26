@@ -2,7 +2,7 @@
   "$comment": "Oscilloscope configuration schema for Zelos App UI",
   "type": "object",
   "title": "Oscilloscope Configuration",
-  "description": "Configure oscilloscope channels, sampling, and trigger modes",
+  "description": "Configure oscilloscope channels and sampling",
   "properties": {
     "num_channels": {
       "type": "integer",
@@ -21,64 +21,11 @@
     "sample_rate": {
       "type": "integer",
       "title": "Sample Rate (Hz)",
-      "description": "Samples per second (1 kHz to 10 MHz)",
-      "minimum": 1000,
-      "maximum": 10000000,
-      "default": 100000,
-      "ui:help": "Higher rates capture faster signals but generate more data"
-    },
-    "trigger_mode": {
-      "type": "string",
-      "title": "Trigger Mode",
-      "description": "Acquisition trigger behavior",
-      "enum": [
-        "continuous",
-        "single",
-        "repeat"
-      ],
-      "enumNames": [
-        "Continuous",
-        "Single Shot",
-        "Repeat (N-Shot)"
-      ],
-      "default": "continuous",
-      "ui:widget": "radio"
-    },
-    "repeat_count": {
-      "type": "integer",
-      "title": "Repeat Count",
-      "description": "Number of captures in repeat mode",
+      "description": "Continuous acquisition sample rate",
       "minimum": 1,
-      "maximum": 1000,
-      "default": 10,
-      "ui:help": "Only used in Repeat mode"
-    },
-    "record_duration": {
-      "type": "number",
-      "title": "Record Duration (seconds)",
-      "description": "Duration of each capture window",
-      "minimum": 1e-06,
-      "maximum": 60.0,
-      "default": 0.01,
-      "ui:help": "Time window for each acquisition (1\u00b5s to 60s)"
-    },
-    "decimation": {
-      "type": "integer",
-      "title": "Decimation Factor",
-      "description": "Reduce data rate by averaging N samples (min-max compression)",
-      "enum": [
-        1,
-        2,
-        4,
-        8,
-        16,
-        32,
-        64,
-        128
-      ],
-      "default": 1,
-      "ui:widget": "select",
-      "ui:help": "Use higher values for longer time windows"
+      "maximum": 10000000,
+      "default": 1000,
+      "ui:help": "For high-rate capture, use the Burst Capture action"
     },
     "demo_signals": {
       "type": "object",
@@ -88,7 +35,7 @@
         "ch1_frequency": {
           "type": "number",
           "title": "CH1 Frequency (Hz)",
-          "default": 1000.0,
+          "default": 1.0,
           "minimum": 0.1,
           "maximum": 1000000
         },
@@ -102,7 +49,7 @@
         "ch2_frequency": {
           "type": "number",
           "title": "CH2 Frequency (Hz)",
-          "default": 1000.0,
+          "default": 10.0,
           "minimum": 0.1,
           "maximum": 1000000
         },
@@ -116,7 +63,7 @@
         "ch3_frequency": {
           "type": "number",
           "title": "CH3 Frequency (Hz)",
-          "default": 1000.0,
+          "default": 100.0,
           "minimum": 0.1,
           "maximum": 1000000
         },
@@ -154,7 +101,6 @@
   },
   "required": [
     "num_channels",
-    "sample_rate",
-    "trigger_mode"
+    "sample_rate"
   ]
 }

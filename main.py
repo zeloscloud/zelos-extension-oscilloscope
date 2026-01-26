@@ -15,21 +15,21 @@ from zelos_extension_oscilloscope.extension import Oscilloscope
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize SDK
-zelos_sdk.init(name="oscilloscope", actions=True)
-
-# Add trace logging handler to send logs to Zelos
-handler = TraceLoggingHandler("oscilloscope_logger")
-logging.getLogger().addHandler(handler)
-
 # Load configuration from config.json (with schema defaults applied)
 config = load_config()
 
 # Create oscilloscope
 oscilloscope = Oscilloscope(config)
 
-# Register interactive actions for the Zelos App
+# Register actions BEFORE SDK init
 zelos_sdk.actions_registry.register(oscilloscope)
+
+# Initialize SDK
+zelos_sdk.init(name="oscilloscope", actions=True)
+
+# Add trace logging handler to send logs to Zelos
+handler = TraceLoggingHandler("oscilloscope_logger")
+logging.getLogger().addHandler(handler)
 
 
 def shutdown_handler(signum: int, frame: FrameType | None) -> None:
