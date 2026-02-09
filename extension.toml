@@ -2,7 +2,7 @@
 # Oscilloscope extension for signal acquisition and waveform visualization
 
 name = "Oscilloscope"
-version = "0.1.1"
+version = "0.1.2"
 description = "High-resolution oscilloscope for multi-channel waveform acquisition with configurable trigger modes and sampling rates"
 author = "Zelos"
 repository = "https://github.com/zeloscloud/zelos-extension-oscilloscope"
