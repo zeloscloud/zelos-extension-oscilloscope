@@ -1,6 +1,7 @@
 """Tests for Oscilloscope extension."""
 
 from zelos_extension_oscilloscope import ChannelConfig, Oscilloscope
+from zelos_extension_oscilloscope.extension import _MAX_BURST_DURATION, _MAX_BURST_RATE
 
 
 def test_oscilloscope_initialization(check) -> None:
@@ -99,3 +100,37 @@ def test_set_channel_frequency_action(check) -> None:
     check.that(result["channel"], "==", 2)
     check.that(result["frequency"], "==", 500.0)
     check.that(scope.channels[1].frequency, "==", 500.0)
+
+
+def test_burst_capture_caps(check) -> None:
+    """Test burst capture enforces rate and duration caps."""
+    config = {"num_channels": 2, "sample_rate": 1000}
+    scope = Oscilloscope(config)
+
+    # Request rate above cap -- should be clamped
+    result = scope.burst_capture(sample_rate=5_000_000, duration=0.001)
+    check.that(result["requested_rate"], "==", _MAX_BURST_RATE)
+
+    # Request duration above cap -- total samples should reflect capped duration
+    result = scope.burst_capture(sample_rate=1000, duration=10.0)
+    expected_samples = int(1000 * _MAX_BURST_DURATION)
+    check.that(result["samples"], "==", expected_samples)
+
+
+def test_channel_keys_cached(check) -> None:
+    """Test that channel keys are pre-cached correctly."""
+    config = {"num_channels": 4}
+    scope = Oscilloscope(config)
+
+    check.that(scope._channel_keys, "==", ["ch1", "ch2", "ch3", "ch4"])
+
+
+def test_disabled_channel_generates_zero(check) -> None:
+    """Test that disabled channels produce zero samples."""
+    config = {"num_channels": 2, "demo_signals": {"noise_level": 0.0}}
+    scope = Oscilloscope(config)
+    scope.noise_level = 0.0
+    scope.channels[0].enabled = False
+
+    samples = scope._generate_samples(0.5)
+    check.that(samples["ch1"], "==", 0.0)

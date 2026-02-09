@@ -23,9 +23,9 @@
       "title": "Sample Rate (Hz)",
       "description": "Continuous acquisition sample rate",
       "minimum": 1,
-      "maximum": 10000000,
+      "maximum": 1000000,
       "default": 1000,
-      "ui:help": "For high-rate capture, use the Burst Capture action"
+      "ui:help": "For high-rate capture, use the Burst Capture action (up to 1 MHz)"
     },
     "demo_signals": {
       "type": "object",
@@ -44,7 +44,9 @@
           "title": "CH1 Amplitude (V)",
           "default": 5.0,
           "minimum": 0.0,
-          "maximum": 100.0
+          "maximum": 100.0,
+          "multipleOf": 0.01,
+          "ui:widget": "range"
         },
         "ch2_frequency": {
           "type": "number",
@@ -58,7 +60,9 @@
           "title": "CH2 Amplitude (V)",
           "default": 3.3,
           "minimum": 0.0,
-          "maximum": 100.0
+          "maximum": 100.0,
+          "multipleOf": 0.01,
+          "ui:widget": "range"
         },
         "ch3_frequency": {
           "type": "number",
@@ -72,7 +76,9 @@
           "title": "CH3 Amplitude (V)",
           "default": 2.5,
           "minimum": 0.0,
-          "maximum": 100.0
+          "maximum": 100.0,
+          "multipleOf": 0.01,
+          "ui:widget": "range"
         },
         "ch4_frequency": {
           "type": "number",
@@ -86,7 +92,9 @@
           "title": "CH4 Amplitude (V)",
           "default": 1.8,
           "minimum": 0.0,
-          "maximum": 100.0
+          "maximum": 100.0,
+          "multipleOf": 0.01,
+          "ui:widget": "range"
         },
         "noise_level": {
           "type": "number",
@@ -94,7 +102,9 @@
           "description": "Random noise added to signals",
           "default": 0.05,
           "minimum": 0.0,
-          "maximum": 1.0
+          "maximum": 1.0,
+          "multipleOf": 0.01,
+          "ui:widget": "range"
         }
       }
     }

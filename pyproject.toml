@@ -19,6 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "zelos-sdk",
+    "numpy",
 ]
 
 [project.urls]
