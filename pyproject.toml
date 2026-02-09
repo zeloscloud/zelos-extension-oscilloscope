@@ -1,6 +1,6 @@
 [project]
 name = "zelos-extension-oscilloscope"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Zelos extension for zelos extension oscilloscope"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 readme = "README.md"
