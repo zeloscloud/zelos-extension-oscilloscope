@@ -58,7 +58,7 @@ zelos-extension-oscilloscope/
 │   ├── package_extension.py        # Creates marketplace tarball
 │   └── bump_version.py             # Updates version numbers
 ├── assets/                         # Icons and media
-│   └── icon.png                    # Marketplace icon
+│   └── icon.svg                    # Marketplace icon
 ├── .github/                        # GitHub automation
 │   ├── workflows/
 │   │   ├── CI.yml                  # Run tests on PR

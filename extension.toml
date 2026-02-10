@@ -11,7 +11,7 @@ keywords = ["oscilloscope", "waveform", "signal", "acquisition", "dsp"]
 categories = ["Test & Measurement", "Signal Analysis"]
 
 # File references
-icon = "assets/icon.png"
+icon = "assets/icon.svg"
 readme = "README.md"
 changelog = "CHANGELOG.md"
 
