@@ -3,6 +3,7 @@
 
 import logging
 import signal
+import time
 from types import FrameType
 
 import zelos_sdk
@@ -11,8 +12,13 @@ from zelos_sdk.hooks.logging import TraceLoggingHandler
 
 from zelos_extension_oscilloscope.extension import Oscilloscope
 
-# Configure basic logging before SDK initialization
-logging.basicConfig(level=logging.INFO)
+# Logging before SDK init; UTC ISO 8601 with ms matches the SDK's Rust tracing lines
+logging.Formatter.converter = time.gmtime
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s.%(msecs)03dZ %(levelname)5s %(name)s: %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
 logger = logging.getLogger(__name__)
 
 # Load configuration from config.json (with schema defaults applied)
