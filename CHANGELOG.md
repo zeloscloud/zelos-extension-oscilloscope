@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial implementation
 
 ### Changed
-- N/A
+- Log lines carry UTC ISO 8601 timestamps with milliseconds, matching the SDK's Rust tracing format
 
 ### Deprecated
 - N/A
