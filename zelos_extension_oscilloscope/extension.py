@@ -14,9 +14,8 @@ logger = logging.getLogger(__name__)
 
 _TWO_PI = 2.0 * math.pi
 
-# Burst capture limits
-_MAX_BURST_RATE = 1_000_000  # 1 MHz
-_MAX_BURST_DURATION = 3.0  # 3 seconds
+_MAX_BURST_RATE = 1_000_000
+_MAX_BURST_DURATION = 3.0
 _BURST_CHUNK_SIZE = 50_000  # samples per chunk for memory-bounded processing
 
 
@@ -40,19 +39,15 @@ class Oscilloscope:
         Args:
             config: Configuration from config.json
         """
-        self.config = config
         self.running = False
         self.acquiring = False
 
-        # Core settings
         self.num_channels = config.get("num_channels", 4)
         self.sample_rate = config.get("sample_rate", 1000)
 
-        # Demo signal settings
         demo = config.get("demo_signals", {})
         self.noise_level = demo.get("noise_level", 0.05)
 
-        # Initialize channel configurations
         self.channels: list[ChannelConfig] = []
         default_freqs = [1.0, 10.0, 100.0, 1000.0]
         for i in range(self.num_channels):
@@ -68,11 +63,8 @@ class Oscilloscope:
         # Pre-cached channel keys to avoid f-string formatting in hot loops
         self._channel_keys = [f"ch{i + 1}" for i in range(self.num_channels)]
 
-        # Timing state
-        self._start_time = 0.0
         self._perf_start = 0.0
 
-        # Create trace sources
         self.source = zelos_sdk.TraceSource("oscilloscope")
         self._define_schema()
 
@@ -94,7 +86,6 @@ class Oscilloscope:
         """Start the oscilloscope."""
         logger.info("Starting oscilloscope")
         self.running = True
-        self._start_time = time.time()
         self._perf_start = time.perf_counter()
         self.acquiring = True
 
@@ -167,15 +158,10 @@ class Oscilloscope:
 
         return samples
 
-    # -------------------------------------------------------------------------
-    # Actions - Control the oscilloscope from Zelos App
-    # -------------------------------------------------------------------------
-
     @zelos_sdk.action("Start", "Start continuous acquisition")
     def start_acquisition(self) -> dict[str, Any]:
         """Start data acquisition."""
         self.acquiring = True
-        self._start_time = time.time()
         self._perf_start = time.perf_counter()
         logger.info("Acquisition started")
         return {"status": "running", "sample_rate": self.sample_rate}
@@ -224,7 +210,6 @@ class Oscilloscope:
         was_acquiring = self.acquiring
         self.acquiring = False
 
-        # Pre-compute per-channel parameters for enabled channels
         keys = self._channel_keys
         num_channels = len(keys)
         ch_enabled = [ch.enabled for ch in self.channels]
@@ -234,34 +219,26 @@ class Oscilloscope:
         ch_offset = np.array([ch.offset for ch in self.channels], dtype=np.float64)
         noise_level = self.noise_level
 
-        # Use direct event handle — bypasses event name string lookup per call
         _burst_log_at = self._burst_event.log_at
 
         base_time_ns = time.time_ns()
         start_perf = time.perf_counter()
 
-        # Reusable sample dict
         sample = dict.fromkeys(keys, 0.0)
 
         try:
-            # Process in chunks for bounded memory usage
             for chunk_start in range(0, total_samples, _BURST_CHUNK_SIZE):
                 chunk_end = min(chunk_start + _BURST_CHUNK_SIZE, total_samples)
                 chunk_size = chunk_end - chunk_start
 
-                # Vectorized time array for this chunk
                 t = np.arange(chunk_start, chunk_end, dtype=np.float64) * sample_interval
 
-                # Vectorized timestamps (nanoseconds) — convert to Python list to avoid
-                # per-element numpy int64 boxing overhead in the inner loop
                 ts_list = (
                     base_time_ns
                     + np.arange(chunk_start, chunk_end, dtype=np.int64) * sample_interval_ns
                 ).tolist()
 
-                # Pre-compute all channel data vectorized, then convert to Python lists.
-                # numpy element access (array[i]) is ~10-50x slower than list access due
-                # to object boxing. Bulk .tolist() converts at C speed.
+                # Indexing a numpy array boxes each element; .tolist() converts once at C speed
                 ch_lists: list[list[float]] = []
                 zeros: list[float] | None = None
                 for j in range(num_channels):
@@ -275,13 +252,11 @@ class Oscilloscope:
                         values += np.random.normal(0.0, noise_level, chunk_size)
                     ch_lists.append(values.tolist())
 
-                # Log each sample — inner loop uses only Python lists (no numpy access)
                 for i in range(chunk_size):
                     for j in range(num_channels):
                         sample[keys[j]] = ch_lists[j][i]
                     _burst_log_at(ts_list[i], **sample)
         finally:
-            # Resume continuous waveform logging if it was active before burst
             self.acquiring = was_acquiring
 
         elapsed = time.perf_counter() - start_perf
