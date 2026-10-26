@@ -1,34 +1,24 @@
-# Zelos Extension Manifest
-# Oscilloscope extension for signal acquisition and waveform visualization
-
 name = "Oscilloscope"
 version = "0.1.2"
-description = "High-resolution oscilloscope for multi-channel waveform acquisition with configurable trigger modes and sampling rates"
+description = "Simulated oscilloscope for demos and testing, with no hardware: 1, 2, 4, 8 or 16 channels of sine waves with noise, streamed as signals, plus burst captures at up to 1 MHz for up to 3 s."
 author = "Zelos"
 repository = "https://github.com/zeloscloud/zelos-extension-oscilloscope"
-homepage = "https://github.com/zeloscloud/zelos-extension-oscilloscope"
-keywords = ["oscilloscope", "waveform", "signal", "acquisition", "dsp"]
-categories = ["Test & Measurement", "Signal Analysis"]
-
-# File references
+# The marketplace search and Zelos AI find an extension by these words, its name and its description.
+keywords = ["oscilloscope", "waveform", "signal", "acquisition", "dsp", "simulator", "demo", "signal generator", "sine wave", "synthetic data", "test signals", "virtual scope", "mock", "burst capture", "sample rate", "noise"]
+categories = ["Test & Measurement", "Signal Analysis", "Simulation"]
 icon = "assets/icon.svg"
 readme = "README.md"
-changelog = "CHANGELOG.md"
 
-# Compatibility
 [zelos]
-version = ">=25.0.22-0"
+version = ">=26.0.10"
 
-# Configuration schema
 [config]
 schema = "config.schema.json"
 
-# Runtime configuration
-[runtime]
-type = "python"
+[agent]
+runtime = "python"
 entry = "main.py"
 python_version = "3.11"
 
-# Graceful shutdown
-[stop]
-grace_seconds = 10
+[package]
+paths = ["main.py", "zelos_extension_oscilloscope", "CHANGELOG.md"]

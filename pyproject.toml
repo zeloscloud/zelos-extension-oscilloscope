@@ -1,8 +1,8 @@
 [project]
 name = "zelos-extension-oscilloscope"
 version = "0.1.2"
-description = "A Zelos extension for zelos extension oscilloscope"
-authors = [{ name = "Your Name", email = "you@example.com" }]
+description = "Simulated oscilloscope for demos and testing, with no hardware: 1, 2, 4, 8 or 16 channels of sine waves with noise, streamed as signals, plus burst captures at up to 1 MHz for up to 3 s."
+authors = [{ name = "Zelos", email = "support@zeloscloud.io" }]
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.11"
@@ -12,33 +12,35 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "zelos-sdk",
+    "zelos-sdk>=0.0.13a1",
     "numpy",
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/zelos-extension-oscilloscope"
-Repository = "https://github.com/yourusername/zelos-extension-oscilloscope"
-Issues = "https://github.com/yourusername/zelos-extension-oscilloscope/issues"
-Documentation = "https://docs.zeloscloud.io/extensions"
+Homepage = "https://github.com/zeloscloud/zelos-extension-oscilloscope"
+Repository = "https://github.com/zeloscloud/zelos-extension-oscilloscope"
+Issues = "https://github.com/zeloscloud/zelos-extension-oscilloscope/issues"
+Documentation = "https://docs.zeloscloud.io/app/extensions/"
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "pytest>=8.4.2",
-    "pre-commit>=4.3.0",
-    "ruff>=0.14.2",
-    "tomli>=2.3.0; python_version < '3.11'",
+    "pytest>=9.1.1",
+    "pre-commit>=4.6.2",
+    "ruff>=0.16.10",
 ]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.uv]
+required-version = ">=0.9.5"
 
 [tool.hatch.build.targets.wheel]
 packages = ["zelos_extension_oscilloscope"]
@@ -48,7 +50,7 @@ testpaths = ["tests"]
 addopts = "--log-cli-level=INFO"
 
 [tool.ruff]
-target-version = "py311"
+target-version = 'py311'
 line-length = 100
 
 [tool.ruff.lint]
@@ -65,9 +67,3 @@ select = [
 ignore = [
     "B008",   # function call in defaults (common in decorators)
 ]
-
-[tool.ruff.lint.per-file-ignores]
-"scripts/*.py" = ["PTH123"]  # Allow open() in scripts
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"

@@ -1,13 +1,13 @@
 # Zelos Oscilloscope Extension
 
-Multi-channel oscilloscope extension for [Zelos](https://zeloscloud.io) with configurable waveform generation and real-time data streaming.
+A simulated multi-channel oscilloscope for [Zelos](https://zeloscloud.io). It generates sine waves with noise and needs no hardware, so you can try live plots, burst captures and actions.
 
 ## Features
 
 - **Multi-channel**: 1, 2, 4, 8, or 16 channels
 - **Continuous acquisition**: Up to 10 kHz sample rate
 - **Burst capture**: High-rate capture up to 1 MHz for up to 3 seconds
-- **Per-channel control**: Adjustable frequency, amplitude, enable/disable
+- **Per-channel control**: frequency for any channel, amplitude for channels 1 to 4, enable/disable
 - **Interactive**: Real-time control from the Zelos App
 
 ## Actions
@@ -32,7 +32,7 @@ Settings are configured from the Zelos App.
 
 ### Demo Signals
 
-Each channel generates a sine wave with configurable frequency and amplitude. Defaults:
+Each channel generates a sine wave. Channels 1 to 4 have frequency and amplitude settings, with these defaults:
 
 | Channel | Frequency | Amplitude |
 |---------|-----------|-----------|
@@ -41,9 +41,11 @@ Each channel generates a sine wave with configurable frequency and amplitude. De
 | CH3 | 100 Hz | 2.5 V |
 | CH4 | 1,000 Hz | 1.8 V |
 
+Channels 5 to 16 have no config settings: each starts at 1,000 Hz, with an amplitude of 5 V divided by its channel number. Set Channel Frequency changes any channel's frequency while it runs.
+
 A noise level (default 0.05 V RMS) is added to all channels.
 
 ## Links
 
 - [Zelos Documentation](https://docs.zeloscloud.io)
-- [Extension SDK Guide](https://docs.zeloscloud.io/sdk)
+- [Extension SDK Guide](https://docs.zeloscloud.io/latest/sdk/)

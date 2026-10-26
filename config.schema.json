@@ -30,7 +30,7 @@
     "demo_signals": {
       "type": "object",
       "title": "Demo Signal Configuration",
-      "description": "Configure simulated signals for each channel",
+      "description": "Frequency and amplitude of channels 1 to 4, and the noise on every channel. Channels 5 to 16 start at fixed defaults.",
       "properties": {
         "ch1_frequency": {
           "type": "number",
