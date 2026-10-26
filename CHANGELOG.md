@@ -7,31 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- Initial implementation
+### Changed
+- Needs Zelos 26.0.10 or later.
+- The marketplace listing says the oscilloscope is simulated, and search finds it by words such as simulator, signal generator and sine wave.
+
+## [0.1.2] - 2026-02-09
 
 ### Changed
-- N/A
+- A new icon.
+- The README describes the extension's real features: burst captures go up to 1 MHz for up to 3 s, and it has no trigger modes or decimation.
 
-### Deprecated
-- N/A
-
-### Removed
-- N/A
-
-### Fixed
-- N/A
-
-### Security
-- N/A
-
----
-
-*For maintainers: When releasing, move items from [Unreleased] to a new version section:*
-
-```markdown
-## [0.1.0] - 2024-12-15
+## [0.1.1] - 2026-02-09
 
 ### Added
-- (move items from Unreleased here)
-```
+- Initial implementation: 1, 2, 4, 8 or 16 simulated channels of sine waves with noise, continuous acquisition, and burst captures at up to 1 MHz for up to 3 s.
+- Actions to start and stop acquisition, run a burst capture, set the sample rate, set a channel's frequency, and enable or disable a channel.

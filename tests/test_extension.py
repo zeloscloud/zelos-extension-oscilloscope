@@ -23,7 +23,7 @@ def test_channel_config(check) -> None:
 
     check.that(ch.frequency, "==", 1000.0)
     check.that(ch.amplitude, "==", 5.0)
-    check.that(ch.enabled, "is true")
+    check.that(ch.enabled, "is_true")
 
 
 def test_sample_generation(check) -> None:
@@ -44,13 +44,13 @@ def test_sample_generation(check) -> None:
 
     # At t=0, sin(0) = 0
     samples = scope._generate_samples(0.0)
-    check.that(samples["ch1"], "~=", 0.0, kwargs={"abs": 0.001})
-    check.that(samples["ch2"], "~=", 0.0, kwargs={"abs": 0.001})
+    check.that(samples["ch1"], "~=", 0.0, abs_tol=0.001)
+    check.that(samples["ch2"], "~=", 0.0, abs_tol=0.001)
 
     # At t=0.00025 (quarter period of 1kHz), sin(pi/2) = 1
     t = 1.0 / (4 * 1000.0)
     samples = scope._generate_samples(t)
-    check.that(samples["ch1"], "~=", 5.0, kwargs={"abs": 0.001})
+    check.that(samples["ch1"], "~=", 5.0, abs_tol=0.001)
 
 
 def test_start_stop_actions(check) -> None:
@@ -60,11 +60,11 @@ def test_start_stop_actions(check) -> None:
 
     result = scope.start_acquisition()
     check.that(result["status"], "==", "running")
-    check.that(scope.acquiring, "is true")
+    check.that(scope.acquiring, "is_true")
 
     result = scope.stop_acquisition()
     check.that(result["status"], "==", "stopped")
-    check.that(scope.acquiring, "is false")
+    check.that(scope.acquiring, "is_false")
 
 
 def test_enable_disable_channel_actions(check) -> None:
@@ -73,12 +73,12 @@ def test_enable_disable_channel_actions(check) -> None:
     scope = Oscilloscope(config)
 
     result = scope.disable_channel(channel=1)
-    check.that(result["enabled"], "is false")
-    check.that(scope.channels[0].enabled, "is false")
+    check.that(result["enabled"], "is_false")
+    check.that(scope.channels[0].enabled, "is_false")
 
     result = scope.enable_channel(channel=1)
-    check.that(result["enabled"], "is true")
-    check.that(scope.channels[0].enabled, "is true")
+    check.that(result["enabled"], "is_true")
+    check.that(scope.channels[0].enabled, "is_true")
 
 
 def test_set_sample_rate_action(check) -> None:
@@ -117,12 +117,12 @@ def test_burst_capture_caps(check) -> None:
     check.that(result["samples"], "==", expected_samples)
 
 
-def test_channel_keys_cached(check) -> None:
+def test_channel_keys_cached() -> None:
     """Test that channel keys are pre-cached correctly."""
     config = {"num_channels": 4}
     scope = Oscilloscope(config)
 
-    check.that(scope._channel_keys, "==", ["ch1", "ch2", "ch3", "ch4"])
+    assert scope._channel_keys == ["ch1", "ch2", "ch3", "ch4"]
 
 
 def test_disabled_channel_generates_zero(check) -> None:
