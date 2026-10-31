@@ -1,11 +1,13 @@
 """Tests for Oscilloscope extension."""
 
+import json
 import logging
 import runpy
 import signal
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
 import zelos_sdk
 from zelos_sdk.hooks.logging import TraceLoggingHandler
 
@@ -169,3 +171,14 @@ def test_logs_record_on_the_scope_source(monkeypatch, tmp_path) -> None:
     added = _run_main(monkeypatch, tmp_path / "config.json")
     assert [type(h) for h in added] == [TraceLoggingHandler]
     assert added[0].trace_source is scopes[0].source
+
+
+def test_saved_config_off_the_schema_exits(monkeypatch, tmp_path, caplog) -> None:
+    saved = tmp_path / "config.json"
+    saved.write_text(json.dumps({"num_channels": 3}))
+    with pytest.raises(SystemExit) as exc:
+        _run_main(monkeypatch, saved)
+    assert exc.value.code == 1
+    assert [r.getMessage() for r in caplog.records if r.levelno == logging.ERROR] == [
+        "Invalid configuration: num_channels: 3 is not one of [1, 2, 4, 8, 16]"
+    ]
