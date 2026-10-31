@@ -2,10 +2,11 @@
 
 import logging
 import signal
+import sys
 from types import FrameType
 
 import zelos_sdk
-from zelos_sdk.extensions import load_config
+from zelos_sdk.extensions import ConfigValidationError, load_config
 from zelos_sdk.hooks.logging import TraceLoggingHandler
 
 from zelos_extension_oscilloscope.extension import Oscilloscope
@@ -17,11 +18,16 @@ if __name__ == "__main__":
     # Configure logging before SDK initialization
     logging.basicConfig(level=logging.INFO)
 
+    # Before init, so a rejected config exits without connecting to the agent
+    try:
+        config = load_config()
+    except ConfigValidationError as e:
+        logger.error("Invalid configuration: %s", "; ".join(m.strip(" •") for m in e.errors))
+        sys.exit(1)
+
     # Initialize the SDK; the name is the trace source name, and actions register under it
     zelos_sdk.init(name="oscilloscope", actions=True)
 
-    # Load configuration and create the oscilloscope
-    config = load_config()
     oscilloscope = Oscilloscope(config)
 
     # Send logs to Zelos as a log event of the oscilloscope's own trace source

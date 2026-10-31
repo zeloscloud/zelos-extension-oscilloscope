@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Logs record as a `log` event on the `oscilloscope` source, next to `waveform` and `burst`, instead of on a separate `oscilloscope_logger` source.
+- Saved settings that fail the settings check stop the extension with one `Invalid configuration: ...` error line and exit status 1, instead of a Python traceback.
 
 ## [0.1.2] - 2026-02-09
 
