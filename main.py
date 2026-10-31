@@ -20,13 +20,12 @@ if __name__ == "__main__":
     # Initialize the SDK; the name is the trace source name, and actions register under it
     zelos_sdk.init(name="oscilloscope", actions=True)
 
-    # Add trace logging handler to send logs to Zelos
-    handler = TraceLoggingHandler("oscilloscope_logger")
-    logging.getLogger().addHandler(handler)
-
     # Load configuration and create the oscilloscope
     config = load_config()
     oscilloscope = Oscilloscope(config)
+
+    # Send logs to Zelos as a log event of the oscilloscope's own trace source
+    logging.getLogger().addHandler(TraceLoggingHandler(oscilloscope.source))
 
     # Register interactive actions for the Zelos App
     zelos_sdk.actions_registry.register(oscilloscope)

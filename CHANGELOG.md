@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Needs Zelos 26.0.10 or later.
 - The marketplace listing says the oscilloscope is simulated, and search finds it by words such as simulator, signal generator and sine wave.
 
+### Fixed
+- Logs record as a `log` event on the `oscilloscope` source, next to `waveform` and `burst`, instead of on a separate `oscilloscope_logger` source.
+
 ## [0.1.2] - 2026-02-09
 
 ### Changed
