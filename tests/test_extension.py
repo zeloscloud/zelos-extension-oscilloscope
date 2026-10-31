@@ -1,5 +1,14 @@
 """Tests for Oscilloscope extension."""
 
+import logging
+import runpy
+import signal
+from pathlib import Path
+from types import SimpleNamespace
+
+import zelos_sdk
+from zelos_sdk.hooks.logging import TraceLoggingHandler
+
 from zelos_extension_oscilloscope import ChannelConfig, Oscilloscope
 from zelos_extension_oscilloscope.extension import _MAX_BURST_DURATION, _MAX_BURST_RATE
 
@@ -134,3 +143,29 @@ def test_disabled_channel_generates_zero(check) -> None:
 
     samples = scope._generate_samples(0.5)
     check.that(samples["ch1"], "==", 0.0)
+
+
+def _run_main(monkeypatch, config_path: Path) -> list[logging.Handler]:
+    """Run main.py with the SDK stubbed; return the logging handlers it added."""
+    root_dir = Path(__file__).parents[1]
+    monkeypatch.setattr(zelos_sdk, "init", lambda **_kwargs: None)
+    monkeypatch.setattr(signal, "signal", lambda *_args: None)
+    monkeypatch.setattr(Oscilloscope, "run", lambda self: None)
+    monkeypatch.setenv("ZELOS_CONFIG_PATH", str(config_path))
+    monkeypatch.chdir(root_dir)
+    root = logging.getLogger()
+    before = list(root.handlers)
+    try:
+        runpy.run_path(str(root_dir / "main.py"), run_name="__main__")
+        return [h for h in root.handlers if h not in before]
+    finally:
+        for handler in [h for h in root.handlers if h not in before]:
+            root.removeHandler(handler)
+
+
+def test_logs_record_on_the_scope_source(monkeypatch, tmp_path) -> None:
+    scopes: list[Oscilloscope] = []
+    monkeypatch.setattr(zelos_sdk, "actions_registry", SimpleNamespace(register=scopes.append))
+    added = _run_main(monkeypatch, tmp_path / "config.json")
+    assert [type(h) for h in added] == [TraceLoggingHandler]
+    assert added[0].trace_source is scopes[0].source
