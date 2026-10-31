@@ -18,8 +18,8 @@ if __name__ == "__main__":
     # Configure logging before SDK initialization
     logging.basicConfig(level=logging.INFO)
 
-    # Initialize the SDK; the name is the trace source name, and actions register under it
-    zelos_sdk.init(name="oscilloscope", actions=True)
+    # Actions register under the manifest name, the name the app resolves them by
+    zelos_sdk.init(name="Oscilloscope", actions=True)
 
     # Add trace logging handler to send logs to Zelos
     handler = TraceLoggingHandler("oscilloscope_logger")

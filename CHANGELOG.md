@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Needs Zelos 26.0.10 or later.
 - The marketplace listing says the oscilloscope is simulated, and search finds it by words such as simulator, signal generator and sine wave.
+- Actions are addressed under the extension's name: `Oscilloscope/...` instead of `oscilloscope/...`.
 
 ## [0.1.2] - 2026-02-09
 
