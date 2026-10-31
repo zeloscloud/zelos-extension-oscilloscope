@@ -1,158 +1,97 @@
 # Contributing
 
-## First Commit
+## Prerequisites
 
-All files are staged and ready. Create your first commit:
+- [Zelos](https://zeloscloud.io) 26.0.10 or later
+- [Zelos CLI](https://docs.zeloscloud.io/reference/cli/) 0.1.11 or later
+- [just](https://github.com/casey/just)
+- [uv](https://docs.astral.sh/uv/)
 
-```bash
-git commit -m "Initial commit"
-```
+The Zelos guide to [developing extensions](https://docs.zeloscloud.io/latest/sdk/how-to/develop-extensions/) covers the SDK, and [Package and Publish Extensions](https://docs.zeloscloud.io/latest/sdk/how-to/package-extensions/) covers the archive and the marketplace.
 
-## Push to GitHub
+## Layout
 
-Create a repository on GitHub, then:
+`extension.toml` describes everything the extension contributes:
 
-```bash
-git remote add origin git@github.com:yourusername/zelos-extension-oscilloscope.git
-git push -u origin main
-```
+| Part | Files | Manifest |
+| ---- | ----- | -------- |
+| Agent runtime | `main.py`, the Python package, `pyproject.toml`, `config.schema.json` | `[agent]`, `[config]` |
 
-## Development Workflow
+| Path                                        | Purpose                                               |
+| ------------------------------------------- | ----------------------------------------------------- |
+| `main.py`                                   | Entry point; loads the config and runs the scope      |
+| `zelos_extension_oscilloscope/extension.py` | The simulated scope, its trace schema and its actions |
+| `tests/test_extension.py`                   | Signal generation, the actions and the burst limits   |
 
-```bash
-just install  # Install dependencies and setup
-just dev      # Run locally
-just test     # Run tests
-just check    # Lint code
-```
+The extension generates its own sine waves with noise, so it needs no hardware.
+`demo_signals` in `config.schema.json` sets the frequency and amplitude of channels 1 to 4, and
+the noise level.
 
-1. Make your changes
-2. Run `just format` to auto-format
-3. Run `just test` to verify tests pass
-4. Commit your changes (pre-commit hooks run automatically)
+## Commands
 
-## Project Structure
+| Command                       | Description                                          |
+| ----------------------------- | ---------------------------------------------------- |
+| `just install`                | Install dependencies and the pre-commit hooks        |
+| `just format`                 | Format code with ruff                                |
+| `just check`                  | Check formatting and lint with ruff                  |
+| `just test`                   | Run tests (pytest)                                   |
+| `just package`                | Package for the Zelos marketplace                    |
+| `just release VERSION`        | Bump version, check, test, commit, tag               |
+| `just clean`                  | Remove build output, caches and packages             |
+| `just run`                    | Run the extension against `./config.json`            |
+| `just ci`                     | Install from the lockfile, check, test and package   |
+| `just delete-release VERSION` | Delete a GitHub release and its tag, then force-push |
+| `just lock`                   | Update `uv.lock` after changing dependencies         |
 
-```
-zelos-extension-oscilloscope/
-├── extension.toml                  # Extension metadata and version
-├── config.schema.json              # Configuration UI schema
-├── main.py                         # Entry point
-├── pyproject.toml                  # Python dependencies
-├── uv.lock                         # Locked dependency versions
-├── Justfile                        # Development commands
-├── LICENSE                         # MIT License
-├── README.md                       # User documentation
-├── CHANGELOG.md                    # Version history
-├── CONTRIBUTING.md                 # This file
-├── .pre-commit-config.yaml         # Git hook configuration
-├── .gitignore                      # Git ignore rules
-├── zelos_extension_oscilloscope/  # Your extension package
-│   ├── __init__.py
-│   ├── extension.py                # Main extension logic
-│   └── utils/                      # Utility modules
-│       └── __init__.py
-├── tests/                          # Test suite
-│   └── test_extension.py
-├── scripts/                        # Build and release scripts
-│   ├── package_extension.py        # Creates marketplace tarball
-│   └── bump_version.py             # Updates version numbers
-├── assets/                         # Icons and media
-│   └── icon.svg                    # Marketplace icon
-├── .github/                        # GitHub automation
-│   ├── workflows/
-│   │   ├── CI.yml                  # Run tests on PR
-│   │   └── release.yml             # Publish releases
-│   └── dependabot.yml              # Dependency updates
-└── .vscode/                        # VSCode settings
-    ├── settings.json
-    └── extensions.json
-```
+`just install` installs the pre-commit hooks in `.pre-commit-config.yaml`. CI runs on every
+push and pull request: it checks that `uv.lock` is in sync, then runs `just check` and `just test`.
 
-## Common Tasks
+## Run it locally
 
-### Run Locally
+`just run` reads `./config.json`. Every setting has a default, so no file is needed for four
+channels at 1 kHz:
 
 ```bash
-just dev
+just run
 ```
 
-Press Ctrl+C to stop.
+`just run` connects to the agent at `ZELOS_AGENT_URL`, else `http://localhost:2300`.
 
-### Add a Dependency
+## Run it in Zelos
 
 ```bash
-uv add package-name        # Runtime dependency
-uv add --dev package-name  # Dev dependency
+zelos extensions install-local .
+zelos extensions start local.oscilloscope --config '{"num_channels": 4, "sample_rate": 1000}'
+zelos extensions logs local.oscilloscope
 ```
 
-### Package for Marketplace
+A local install runs from your project directory, so you do not install again after a code
+change:
+
+- Agent runtime: stop and start the extension. After a dependency change, stop it and run
+  `zelos extensions reinstall local.oscilloscope`.
+- `extension.toml`: run `zelos extensions install-local .` again.
+
+## Packaging
 
 ```bash
 just package
 ```
 
-This creates a `.tar.gz` file ready to upload to the Zelos Marketplace (automatically happens in CI!)
+The archive lands next to `extension.toml` as `<name>-<version>.tar.gz`, where `<name>` is the
+manifest name in lowercase with every other run of characters turned into one hyphen. It holds
+`extension.toml`, the README, the icon, the config schema and the paths listed in
+`[package] paths`. With an agent runtime it also holds `pyproject.toml`, `uv.lock` and
+`actions.json`, the list of actions that run while the extension is stopped.
 
-### Create a Release
+## Release
+
+Add the release to `CHANGELOG.md` and commit it, then:
 
 ```bash
 just release 1.0.0
 git push --follow-tags
 ```
 
-This updates version numbers, runs tests, and creates a git tag.
-
-## Testing
-
-### Write Tests
-
-```python
-# tests/test_feature.py
-from zelos_extension_oscilloscope.extension import MyExtension
-
-def test_something():
-    extension = MyExtension({"setting": "value"})
-    assert extension.do_something() == expected_result
-```
-
-### Run Tests
-
-```bash
-just test           # Run all tests
-uv run pytest -v    # Verbose output
-uv run pytest -k test_name  # Run specific test
-```
-
-## Code Quality
-
-### Formatting & Linting
-
-```bash
-just format  # Auto-fix formatting
-just check   # Check for issues
-```
-
-Pre-commit hooks run automatically on `git commit` and will:
-- Format code with ruff
-- Check for common issues
-- Validate YAML/TOML/JSON files
-
-### Type Hints
-
-Use type hints on all function signatures:
-
-```python
-def my_function(name: str, count: int) -> list[str]:
-    return [name] * count
-```
-
-## Getting Help
-
-- [Zelos Docs](https://docs.zeloscloud.io)
-- [SDK Guide](https://docs.zeloscloud.io/sdk)
-- [GitHub Issues](https://github.com/yourusername/zelos-extension-oscilloscope/issues)
-
-## License
-
-MIT - see [LICENSE](LICENSE)
+The release workflow checks, tests and packages the extension, then attaches the archive to a
+GitHub release. The Zelos marketplace picks up each new release.
