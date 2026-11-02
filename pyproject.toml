@@ -7,7 +7,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 keywords = ["zelos", "extension"]
 dependencies = [
-    "zelos-sdk>=0.0.13a1",
+    "zelos-sdk>=0.0.13",
     "numpy",
 ]
 

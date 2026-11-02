@@ -549,7 +549,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "zelos-sdk", specifier = ">=0.0.13a1" },
+    { name = "zelos-sdk", specifier = ">=0.0.13" },
 ]
 
 [package.metadata.requires-dev]
@@ -561,15 +561,15 @@ dev = [
 
 [[package]]
 name = "zelos-sdk"
-version = "0.0.13a2"
+version = "0.0.13"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jsonschema" },
     { name = "pyarrow" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b6/80/02d030eb5a7df745dcb16e18008d082f59064886ae279c7aca085359f5db/zelos_sdk-0.0.13a2-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:a8ef60ab2747253bfbaf98d2a07795b7043f12640b5ee1c2fd164cdd296c340a", size = 34075968, upload-time = "2026-10-26T16:09:50.884Z" },
-    { url = "https://files.pythonhosted.org/packages/ed/28/df60d429227e7edbb2cb14ae345fedcbc3dfe599ec312664e31add24f972/zelos_sdk-0.0.13a2-cp310-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:608e5e95dda5a88bc41b6f15b6b5f7a460503aca217aa84886a8434dd6c95946", size = 46395542, upload-time = "2026-10-26T16:09:54.23Z" },
-    { url = "https://files.pythonhosted.org/packages/66/99/4cfe9ff7cefab2e0648df4909b7fe7550b18cd4b4033270d090e2b5313c7/zelos_sdk-0.0.13a2-cp310-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:9b9e10013bb6f8be2cc63edaf72c4c4531469604e635aeba740cc37448f38269", size = 45871219, upload-time = "2026-10-26T16:09:57.534Z" },
-    { url = "https://files.pythonhosted.org/packages/51/c9/7838222408fa9f30794356ef706b282e0cb0d157da46280bb2773ab9675d/zelos_sdk-0.0.13a2-cp310-abi3-win_amd64.whl", hash = "sha256:a883e065a623bc67411d4c145e0c540d1a30524e9d5dfc655e37e47806e36801", size = 36443093, upload-time = "2026-10-26T16:10:00.921Z" },
+    { url = "https://files.pythonhosted.org/packages/fa/ba/a617a2db49cbd96786d24ac8103b532eea3b93f00022b52eea159bce8844/zelos_sdk-0.0.13-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:611c9a1a9f4c14f7045fd9ff864b16e73646ad2b4438668436354c7a7aa77a3d", size = 33946339, upload-time = "2026-11-01T19:18:10.076Z" },
+    { url = "https://files.pythonhosted.org/packages/85/06/6d0749f5ac07a3ecb6a3d9f2aae0e121c423efae2c259acb34b650e46616/zelos_sdk-0.0.13-cp310-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:fac159360378f9a115cb05ccd9c0cf0f1b3228248aa5b2c102e086970272f2d5", size = 46165722, upload-time = "2026-11-01T19:36:59.748Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/d0/44e4dae748c5f4e795d818a08178bd01dd76ffdd0d1f5d024aa86d161d29/zelos_sdk-0.0.13-cp310-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:b545bfbd0f8d3a2d3a16609fef142bae6521be74e06218e4ac064ab387cd0270", size = 45671012, upload-time = "2026-11-01T19:48:19.672Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/62/9e26f5787821f9af20c43630df6c8fe7df648f3b77d07d84d42fa9af4b27/zelos_sdk-0.0.13-cp310-abi3-win_amd64.whl", hash = "sha256:6dc60cbedff0f954461434b3d6047f8ea0cad8f19ddb7eeae20713cf95cda269", size = 36269804, upload-time = "2026-11-01T19:48:25.314Z" },
 ]
